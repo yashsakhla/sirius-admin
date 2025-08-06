@@ -31,7 +31,7 @@ export default function ProductsTable({ products, onToggleActive, onDelete, onEd
             <td className="px-4 py-2">{p.description}</td>
             <td className="px-4 py-2">{p.size}</td>
             <td className="px-4 py-2">{p.category}</td>
-            <td className="px-4 py-2">₹{p.price}</td>
+            <td className="px-4 py-2">₹{p.discountedPrice}</td>
             <td className="px-4 py-2">
               <ProductActions
                 product={p}

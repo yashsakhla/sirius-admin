@@ -58,6 +58,11 @@ export const getAllOrders = () => {
   return api.get('/api/orders'); // 💡 Make sure this matches your backend route
 };
 
+export const getUserOrders = (id) => {
+  return api.get(`/api/orders/user/${id}`); // 💡 Make sure this matches your backend route
+};
+
+
 // Later: update order status (admin)
 export const updateOrderStatus = (orderId, status) => {
   return api.put(`/api/orders/${orderId}/status`, { status });

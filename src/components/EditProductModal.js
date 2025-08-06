@@ -6,7 +6,7 @@ export default function EditProductModal({ product, onClose, onSave }) {
   const [form, setForm] = useState({
     name: product.name,
     description: product.description,
-    price: product.price,
+    discountedPrice: product.discountedPrice,
     image: product.image || "",
     imageFile: null, // For uploaded new image
   });
@@ -66,9 +66,9 @@ export default function EditProductModal({ product, onClose, onSave }) {
           <div>
             <label className="block font-medium mb-1">Price (₹)</label>
             <input
-              name="price"
+              name="discountedPrice"
               type="number"
-              value={form.price}
+              value={form.discountedPrice}
               onChange={handleChange}
               className="w-full border px-3 py-2 rounded"
             />
@@ -76,20 +76,14 @@ export default function EditProductModal({ product, onClose, onSave }) {
           {/* Image Upload with Preview */}
           <div>
             <label className="block font-medium mb-1">Product Image</label>
-            <div className="flex items-center gap-3">
-              <img
-                src={form.image || "https://via.placeholder.com/80"}
-                alt="Preview"
-                className="w-20 h-20 object-cover border rounded"
-              />
-              <input
-                type="file"
-                accept="image/*"
-                ref={fileRef}
-                onChange={handleFileChange}
-                className="block"
-              />
-            </div>
+            <input
+            name="image"
+            placeholder="Product Image URL"
+            value={form.image}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+            required
+          />
           </div>
 
           <div className="flex justify-end gap-3 pt-4">

@@ -8,7 +8,7 @@ export default function UserOrdersTable({ orders }) {
           <th className="py-1 px-2">Order ID</th>
           <th className="py-1 px-2">Product IDs</th>
           <th className="py-1 px-2">No. of Products</th>
-          <th className="py-1 px-2">Product Names</th>
+          <th className="py-1 px-2">Price</th>
           <th className="py-1 px-2">Order Date</th>
           <th className="py-1 px-2">Status</th>
         </tr>
@@ -23,11 +23,22 @@ export default function UserOrdersTable({ orders }) {
         ) : (
           orders.map((order, index) => (
             <tr key={index} className="border-t border-gray-200 bg-white">
-              <td className="py-1 px-2">{order.orderId}</td>
-              <td className="py-1 px-2">{order.productIds.join(', ')}</td>
-              <td className="py-1 px-2">{order.productIds.length}</td>
-              <td className="py-1 px-2">{order.products.join(', ')}</td>
-              <td className="py-1 px-2">{order.orderDate}</td>
+              <td className="py-1 px-2">{order._id}</td>
+              <td className="py-1 px-2">{order.products.join(", ")}</td>
+              <td className="py-1 px-2">{order.products.length}</td>
+              <td className="py-1 px-2">₹ {(order.totalPrice).toFixed(2)}</td>
+              <td className="py-1 px-2">
+                {order.date
+                  ? new Date(order.date).toLocaleString(undefined, {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                      hour: "numeric",
+                      minute: "2-digit",
+                      hour12: true,
+                    })
+                  : ""}
+              </td>
               <td className="py-1 px-2">{order.status}</td>
             </tr>
           ))

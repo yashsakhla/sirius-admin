@@ -1,9 +1,8 @@
-// src/components/UsersTable.js
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import PremiumToggle from './PremiumToggle';
 import UserOrdersTable from './UserOrdersTable';
 import { FaChevronDown, FaChevronRight } from 'react-icons/fa';
+import { getUserOrders } from '../api'; // make sure this is correctly imported
 
 function formatAddress(address) {
   if (!address) return 'N/A';
@@ -13,9 +12,29 @@ function formatAddress(address) {
 
 export default function UsersTable({ users, onTogglePremium }) {
   const [expandedUserId, setExpandedUserId] = useState(null);
+  const [userOrders, setUserOrders] = useState({}); // { userId: [orders...] }
+  const [loadingOrders, setLoadingOrders] = useState({}); // { userId: boolean }
 
-  const toggleExpand = (userId) => {
-    setExpandedUserId((prev) => (prev === userId ? null : userId));
+  const toggleExpand = async (userId) => {
+    if (expandedUserId === userId) {
+      setExpandedUserId(null);
+      return;
+    }
+    setExpandedUserId(userId);
+
+    // Only fetch if not already loaded
+    if (!userOrders[userId] && !loadingOrders[userId]) {
+      setLoadingOrders((prev) => ({ ...prev, [userId]: true }));
+      try {
+        const res = await getUserOrders(userId); // assumes this returns { data: [...] }
+        setUserOrders((prev) => ({ ...prev, [userId]: res.data }));
+      } catch (err) {
+        setUserOrders((prev) => ({ ...prev, [userId]: [] }));
+        alert('Failed to load user orders');
+      } finally {
+        setLoadingOrders((prev) => ({ ...prev, [userId]: false }));
+      }
+    }
   };
 
   return (
@@ -62,7 +81,11 @@ export default function UsersTable({ users, onTogglePremium }) {
               {expandedUserId === user._id && (
                 <tr>
                   <td colSpan="8" className="bg-gray-50 px-4 py-2">
-                    <UserOrdersTable orders={user.orders} />
+                    {loadingOrders[user._id] ? (
+                      <div>Loading Orders...</div>
+                    ) : (
+                      <UserOrdersTable orders={userOrders[user._id] || []} />
+                    )}
                   </td>
                 </tr>
               )}
