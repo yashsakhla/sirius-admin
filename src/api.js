@@ -31,6 +31,14 @@ export const adminLogin = (credentials) => {
   return api.post('/api/admin/login', credentials);
 };
 
+export const logout = () => {
+  // Remove token from localStorage
+  localStorage.removeItem('token');
+  // Remove Authorization header from axios defaults
+  delete api.defaults.headers.common['Authorization'];
+};
+
+
 // ✅ Dashboard
 export const fetchDashboardData = () => {
   return api.get('/api/admin/dashboard');

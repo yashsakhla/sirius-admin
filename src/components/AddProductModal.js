@@ -6,12 +6,12 @@ export default function AddProductModal({ onClose, onAdd }) {
     name: '',
     description: '',
     image: '',
-    discountedPrice: '',
+    price: '',
     size: '20ml',
     category: '',
   });
 
-  const sizes = ['20ml', '60ml', '100ml'];
+  const sizes = ['20ml', '50ml', '100ml'];
 
   const { data, loadDataIfNeeded } = useGlobalData();
   const categories = data.categories || [];
@@ -37,11 +37,11 @@ export default function AddProductModal({ onClose, onAdd }) {
   };
 
   const handleSubmit = () => {
-    if (!form.name || !form.image || !form.discountedPrice) {
+    if (!form.name || !form.image || !form.price) {
       return alert('Fill all fields');
     }
 
-    onAdd({ ...form, discountedPrice: parseFloat(form.discountedPrice), active: true });
+    onAdd({ ...form, price: parseFloat(form.price), active: true });
   };
 
   return (
@@ -96,10 +96,10 @@ export default function AddProductModal({ onClose, onAdd }) {
           </select>
 
           <input
-            name="discountedPrice"
+            name="price"
             type="number"
             placeholder="Price ₹"
-            value={form.discountedPrice}
+            value={form.price}
             onChange={handleChange}
             className="w-full border px-3 py-2 rounded"
             required

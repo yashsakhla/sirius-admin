@@ -1,6 +1,8 @@
 // components/Sidebar.js
 import SidebarItem from "./SidebarItem";
 import { FaBox, FaUser, FaTags, FaCog, FaSignOutAlt, FaServicestack, FaCode, FaDashcube } from "react-icons/fa";
+import { logout } from "../api.js";
+import { useNavigate } from "react-router-dom";
 
 const navItems = [
   { to: '/dashboard', label: 'Dashboard', icon: <FaDashcube /> },
@@ -13,6 +15,12 @@ const navItems = [
 ];
 
 export default function Sidebar() {
+  const navigate = useNavigate();
+    const handleLogout = () => {
+    logout();         // Clear token and axios
+    navigate("/login"); // Redirect to login page
+  };
+
   return (
     <aside className="bg-gray-800 text-white w-64 min-h-screen flex flex-col">
       <div className="text-2xl font-bold px-6 py-4 border-b border-gray-700">Admin Panel</div>
@@ -21,7 +29,7 @@ export default function Sidebar() {
           <SidebarItem key={item.label} to={item.to} icon={item.icon} label={item.label} />
         ))}
       </nav>
-      <button className="flex items-center mx-6 my-4 p-2 rounded hover:bg-gray-700 transition" onClick={() => {/* Handle logout */}}>
+      <button className="flex items-center mx-6 my-4 p-2 rounded hover:bg-gray-700 transition" onClick={() => {handleLogout()}}>
         <FaSignOutAlt className="mr-2" /> Logout
       </button>
     </aside>
