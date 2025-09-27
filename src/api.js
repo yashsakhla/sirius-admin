@@ -1,7 +1,7 @@
 // src/api.js
 import axios from 'axios';
 
-const BASE_API_URL = 'https://sirius-backend-ahsc.onrender.com'; // or HTTPS if deployed
+const BASE_API_URL = 'https://api.siriusperfumes.com'; // or HTTPS if deployed
 
 const api = axios.create({
   baseURL: BASE_API_URL,
