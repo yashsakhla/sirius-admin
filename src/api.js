@@ -73,7 +73,7 @@ export const getUserOrders = (id) => {
 
 // Later: update order status (admin)
 export const updateOrderStatus = (orderId, status) => {
-  return api.put(`/api/orders/${orderId}/status`, { status });
+  return api.put(`/api/orders/${orderId}/status`, { Deliverystatus:status });
 };
 
 

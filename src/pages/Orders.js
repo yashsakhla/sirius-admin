@@ -34,7 +34,7 @@ export default function Orders() {
       await updateOrderStatus(orderId, newStatus);
       setOrders((prev) =>
         prev.map((order) =>
-          order._id === orderId ? { ...order, status: newStatus } : order
+          order._id === orderId ? { ...order, Deliverystatus: newStatus } : order
         )
       );
     } catch (err) {

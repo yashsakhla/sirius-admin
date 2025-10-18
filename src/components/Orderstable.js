@@ -55,7 +55,8 @@ export default function OrdersTable({ orders, onChangeStatus }) {
             <th className={centerCell}>Products</th>
             <th className={centerCell}>Order Date</th>
             <th className={centerCell}>Order Total</th>
-            <th className={centerCell}>Status</th>
+            <th className={centerCell}>Delivery Status</th>
+            <th className={centerCell}>Payment Status</th>
             <th className={centerCell}>Details</th>
           </tr>
         </thead>
@@ -82,7 +83,7 @@ export default function OrdersTable({ orders, onChangeStatus }) {
               <tr
                 key={order._id}
                 className={`border-t transition ${
-                  statusColors[order.status] || "bg-white"
+                  statusColors[order.Deliverystatus] || "bg-white"
                 }`}
               >
                 <td className={`${centerCell} font-semibold`}>{order._id}</td>
@@ -104,21 +105,24 @@ export default function OrdersTable({ orders, onChangeStatus }) {
                 </td>
                 <td className={centerCell}>
                   <StatusDropdown
-                    current={order.status}
-                    onChange={(status) => onChangeStatus(order._id, status)}
+                    current={order.Deliverystatus}
+                    onChange={(Deliverystatus) => onChangeStatus(order._id, Deliverystatus)}
                     customClass={
                       "inline-block px-3 py-1 rounded-full text-xs font-semibold shadow-sm " +
-                      (order.status === "Delivered"
+                      (order.Deliverystatus === "Delivered"
                         ? "bg-green-500 text-white"
-                        : order.status === "Shipped"
+                        : order.Deliverystatus === "Processing"
                         ? "bg-yellow-500 text-yellow-900"
-                        : order.status === "Ordered"
+                        : order.Deliverystatus === "Ordered"
                         ? "bg-orange-500 text-white"
-                        : order.status === "Cancelled"
+                        : order.Deliverystatus === "Cancelled"
                         ? "bg-red-500 text-white"
                         : "bg-blue-500 text-white")
                     }
                   />
+                </td>
+                <td className={centerCell}>
+                  {order.paymentStatus || "—"}
                 </td>
                 <td className={centerCell}>
                   <button
