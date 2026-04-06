@@ -44,7 +44,8 @@ export default function Products() {
 
   const handleUpdateProduct = async (updatedProduct) => {
     try {
-      await updateProduct(updatedProduct._id, updatedProduct);
+      const { _id, ...body } = updatedProduct;
+      await updateProduct(_id, body);
       await refreshData("products");
       setEditProduct(null);
     } catch (err) {

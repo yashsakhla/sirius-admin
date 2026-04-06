@@ -1,5 +1,10 @@
 // src/components/ProductsTable.js
 import ProductActions from "./ProductActions.js";
+import {
+  formatProductPriceDisplay,
+  formatProductSizesDisplay,
+} from "../constants/productSizes";
+import { formatProductCategoryLabel } from "../constants/productCategory";
 
 export default function ProductsTable({ products, onToggleActive, onDelete, onEdit }) {
   return (
@@ -10,6 +15,7 @@ export default function ProductsTable({ products, onToggleActive, onDelete, onEd
           <th className="px-4 py-2">Image</th>
           <th className="px-4 py-2">Name</th>
           <th className="px-4 py-2">Description</th>
+          <th className="px-4 py-2">Listing</th>
           <th className="px-4 py-2">Size</th>
           <th className="px-4 py-2">Category</th>
           <th className="px-4 py-2">Price</th>
@@ -22,16 +28,19 @@ export default function ProductsTable({ products, onToggleActive, onDelete, onEd
             <td className="px-4 py-2">{p._id}</td>
             <td className="px-4 py-2">
               <img
-                src={p.image}
+                src={(Array.isArray(p.images) && p.images.length ? p.images[0] : p.image)}
                 alt={p.name}
                 className="w-16 h-auto object-cover rounded"
               />
             </td>
             <td className="px-4 py-2">{p.name}</td>
             <td className="px-4 py-2">{p.description}</td>
-            <td className="px-4 py-2">{p.size}</td>
+            <td className="px-4 py-2">{formatProductCategoryLabel(p)}</td>
+            <td className="px-4 py-2">{formatProductSizesDisplay(p)}</td>
             <td className="px-4 py-2">{p.category}</td>
-            <td className="px-4 py-2">₹{p.discountedPrice}</td>
+            <td className="px-4 py-2 whitespace-normal max-w-xs">
+              {formatProductPriceDisplay(p)}
+            </td>
             <td className="px-4 py-2">
               <ProductActions
                 product={p}

@@ -1,7 +1,9 @@
 // src/api.js
 import axios from 'axios';
 
-const BASE_API_URL = 'https://api.siriusperfumes.com'; // or HTTPS if deployed
+const BASE_API_URL = "https://api.siriusperfumes.com"; // or HTTPS if deployed
+const IMGBB_UPLOAD_URL = 'https://api.imgbb.com/1/upload';
+const IMGBB_API_KEY = '673024c7f84a4320a7cc4c3934cccef9';
 
 const api = axios.create({
   baseURL: BASE_API_URL,
@@ -49,7 +51,7 @@ export const getAllProducts = () => {
 };
 
 export const createProduct = (product) => {
-  return api.post('/api/perfumes/add-product',product);
+  return api.post('/api/perfumes/add-product', product);
 };
 
 export const updateProduct = (id, updatedFields) => {
@@ -102,6 +104,36 @@ export const updateCategory = (id, name) => {
   return api.put(`/api/categories/${id}`, { name });
 };
 
+/**
+ * Notifications API — router mounted at e.g. /api/notifications
+ *
+ * GET    /api/notifications        — public, active only (getActiveNotifications)
+ * GET    /api/notifications/admin  — admin (getAllNotificationsAdmin)
+ * POST   /api/notifications        — admin create; body: { heading, description?, content?, image?, status? }
+ * PUT    /api/notifications/:id    — admin update (partial allowed per backend)
+ * DELETE /api/notifications/:id   — admin delete
+ *
+ * Schema: status enum 'active' | 'inactive'; heading required; description, content default ''.
+ */
+export const getActiveNotifications = () => {
+  return api.get('/api/notifications');
+};
+
+export const getNotificationsAdmin = () => {
+  return api.get('/api/notifications/admin');
+};
+
+export const createNotification = (body) => {
+  return api.post('/api/notifications', body);
+};
+
+export const updateNotification = (id, body) => {
+  return api.put(`/api/notifications/${id}`, body);
+};
+
+export const deleteNotification = (id) => {
+  return api.delete(`/api/notifications/${id}`);
+};
 
 export const fetchOffers = async () => {
   const res = api.get(`/api/perfumes/offer`);
@@ -122,6 +154,29 @@ export const createOffer = async (offer) => {
 export const updateOffer = async (code, updatedBody) => {
   const res = api.put(`/api/perfumes/offer/${code}`, updatedBody);
   return res;
+};
+
+export const uploadImagesToImgbb = async (files, { expiration } = {}) => {
+  const safeFiles = Array.from(files || []).filter(Boolean);
+  if (!safeFiles.length) return [];
+
+  const uploads = safeFiles.map(async (file) => {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const res = await axios.post(IMGBB_UPLOAD_URL, formData, {
+      params: {
+        key: IMGBB_API_KEY,
+        ...(expiration ? { expiration } : {}),
+      },
+    });
+
+    const url = res?.data?.data?.url;
+    if (!url) throw new Error('Image upload succeeded but URL missing.');
+    return url;
+  });
+
+  return Promise.all(uploads);
 };
 
 export default api;

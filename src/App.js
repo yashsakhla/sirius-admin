@@ -7,6 +7,7 @@ import Products from './pages/Products';
 import Settings from './pages/Settings';
 import Category from './pages/Category';
 import Offers from './pages/Offers';
+import Notifications from './pages/Notifications';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login'; // ✅ new login page
 import PrivateRoute from './components/PrivateRoute'; // ✅ private route guard
@@ -38,6 +39,7 @@ function App() {
           <Route path="products" element={<Products />} />
           <Route path="category" element={<Category />} />
           <Route path="offers" element={<Offers />} />
+          <Route path="notifications" element={<Notifications />} />
           <Route path="settings" element={<Settings />} />
         </Route>
 

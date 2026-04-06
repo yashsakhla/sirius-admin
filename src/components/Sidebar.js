@@ -1,6 +1,6 @@
 // components/Sidebar.js
 import SidebarItem from "./SidebarItem";
-import { FaBox, FaUser, FaTags, FaCog, FaSignOutAlt, FaServicestack, FaCode, FaDashcube } from "react-icons/fa";
+import { FaBox, FaUser, FaTags, FaCog, FaSignOutAlt, FaServicestack, FaCode, FaDashcube, FaBell } from "react-icons/fa";
 import { logout } from "../api.js";
 import { useNavigate } from "react-router-dom";
 
@@ -11,6 +11,7 @@ const navItems = [
   { to: '/products', label: 'Products', icon: <FaTags /> },
   { to: '/category', label: 'Category', icon: <FaServicestack /> },
   { to: '/offers', label: 'Offers & Coupon', icon: <FaCode /> },
+  { to: '/notifications', label: 'Notifications', icon: <FaBell /> },
   { to: '/settings', label: 'Settings', icon: <FaCog /> }
 ];
 
