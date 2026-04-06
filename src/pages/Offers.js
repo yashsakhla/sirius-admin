@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import OffersTable from '../components/OffersTable';
 import {
   fetchOffers,
@@ -10,36 +10,34 @@ export default function Offers() {
   const [offers, setOffers] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // 🔁 Load offers on first mount
+  const loadOffers = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetchOffers();
+      const data = res.data;
+
+      if (Array.isArray(data)) {
+        setOffers(data);
+      } else {
+        console.warn('Unexpected offers response:', data);
+        setOffers([]);
+      }
+    } catch (err) {
+      console.error('Failed to fetch offers', err);
+      setOffers([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     loadOffers();
-  }, []);
-const loadOffers = async () => {
-  setLoading(true);
-  try {
-    const res = await fetchOffers();
-    const data = res.data;
-    console.log("Fetched offers from API:", data); // 👈 Confirm what you're getting
-
-    if (Array.isArray(data)) {
-      setOffers(data);
-    } else {
-      console.warn('Unexpected offers response:', data);
-      setOffers([]);
-    }
-  } catch (err) {
-    console.error('Failed to fetch offers', err);
-    setOffers([]);
-  } finally {
-    setLoading(false);
-  }
-};
-
+  }, [loadOffers]);
 
 
   const handleAddOffer = async (newOffer) => {
     try {
-      const created = await createOffer(newOffer);
+      await createOffer(newOffer);
       loadOffers();
     } catch (err) {
       console.error('Create offer failed', err);
@@ -55,9 +53,8 @@ const loadOffers = async () => {
         active: !offer.active,
       };
 
-      const data = await updateOffer(offer.code, updated);
-
-     loadOffers()
+      await updateOffer(offer.code, updated);
+      loadOffers();
     } catch (err) {
       console.error('Failed to update offer', err);
       alert('Could not update status');

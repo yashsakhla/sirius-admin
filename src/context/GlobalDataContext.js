@@ -22,7 +22,7 @@ export const GlobalDataProvider = ({ children }) => {
 
   // 🧠 Unified Lazy Fetch Handler
   const loadDataIfNeeded = async (type) => {
-    if (data[type]) return; // already loaded = skip
+    if (data[type]) return;
 
     setLoading((prev) => ({ ...prev, [type]: true }));
 
@@ -37,10 +37,6 @@ export const GlobalDataProvider = ({ children }) => {
           break;
         case 'orders':
           result = await getAllOrders();
-          break;
-        // loadDataIfNeeded('products') ✅
-        case 'products':
-          result = await getAllProducts();
           break;
 
         default:

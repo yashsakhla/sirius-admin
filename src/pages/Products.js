@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import ProductsTable from "../components/ProductsTable";
 import AddProductModal from "../components/AddProductModal";
 import EditProductModal from "../components/EditProductModal";
@@ -11,11 +11,13 @@ export default function Products() {
   const [editProduct, setEditProduct] = useState(null);
 
   const products = data.products;
+  const loadDataRef = useRef(loadDataIfNeeded);
+  loadDataRef.current = loadDataIfNeeded;
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) setAuthToken(token);
-    loadDataIfNeeded("products");
+    loadDataRef.current("products");
   }, []);
 
   const handleToggleActive = async (id) => {

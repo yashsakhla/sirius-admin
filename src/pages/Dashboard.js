@@ -1,5 +1,5 @@
 // src/pages/Dashboard.js
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import DashboardCard from '../components/DashboardCard';
 import CityRankingTable from '../components/CityRankingTable';
 import { useGlobalData } from '../context/GlobalDataContext';
@@ -10,13 +10,13 @@ export default function Dashboard() {
   const orders = data.orders;
 
   const [totalDisplay, setTotalDisplay] = useState(0);
+  const loadDataRef = useRef(loadDataIfNeeded);
+  loadDataRef.current = loadDataIfNeeded;
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) setAuthToken(token);
-
-    // 🔁 Lazy load orders once
-    loadDataIfNeeded('orders');
+    loadDataRef.current('orders');
   }, []);
 
   // 🧠 Derived stats (memoized for performance)

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   createCategory,
   updateCategory as updateCategoryApi,
@@ -21,13 +21,13 @@ export default function Category() {
   const [editingCategory, setEditingCategory] = useState(null);
 
   const categories = data.categories;
+  const loadDataRef = useRef(loadDataIfNeeded);
+  loadDataRef.current = loadDataIfNeeded;
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) setAuthToken(token);
-    
-    // ⚡ Lazy load categories from global store
-    loadDataIfNeeded("categories");
+    loadDataRef.current("categories");
   }, []);
 
   const handleAddCategory = async () => {
