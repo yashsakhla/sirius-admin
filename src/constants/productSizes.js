@@ -1,5 +1,5 @@
 /** Canonical size options and stable sort order for product variants */
-export const SIZE_OPTIONS = ["20ml", "50ml", "100ml"];
+export const SIZE_OPTIONS = ["10ml", "20ml", "50ml", "100ml"];
 
 export function sortSizeVariants(variants) {
   return [...variants].sort(
@@ -23,12 +23,13 @@ export function productSizeVariantList(product) {
 }
 
 /**
- * Build initial variant rows for forms: { size, basicPrice, discountedPrice } (string inputs).
+ * Build initial variant rows for forms: { size, basicPrice, discountedPrice, qty } (string inputs).
  * Supports legacy variant `price` and product-level discountedPrice.
  */
 export function productToSizeVariants(product) {
   const fallbackBasic = String(product.price ?? "");
   const fallbackDiscounted = String(product.discountedPrice ?? "");
+  const fallbackQty = String(product.qty ?? "");
 
   const list = productSizeVariantList(product);
   if (list) {
@@ -38,12 +39,14 @@ export function productToSizeVariants(product) {
         size: s.size,
         basicPrice: String(s.basicPrice ?? s.price ?? fallbackBasic ?? ""),
         discountedPrice: String(s.discountedPrice ?? s.discountPrice ?? ""),
+        qty: String(s.qty ?? fallbackQty ?? ""),
       }));
     }
     return list.map((size) => ({
       size,
       basicPrice: fallbackBasic,
       discountedPrice: fallbackDiscounted,
+      qty: fallbackQty,
     }));
   }
 
@@ -53,6 +56,7 @@ export function productToSizeVariants(product) {
         size: product.size,
         basicPrice: fallbackBasic,
         discountedPrice: fallbackDiscounted,
+        qty: fallbackQty,
       },
     ];
   }
@@ -104,6 +108,17 @@ export function formatProductPriceDisplay(product) {
   }
   if (product.discountedPrice != null && product.discountedPrice !== "") {
     return `₹${product.discountedPrice}`;
+  }
+  return "—";
+}
+
+export function formatProductQtyDisplay(product) {
+  const list = productSizeVariantList(product);
+  if (list && typeof list[0] === "object" && list[0] !== null && "size" in list[0] && "qty" in list[0]) {
+    return list.map((s) => `${s.size}: ${s.qty ?? "—"}`).join(", ");
+  }
+  if (product.qty != null && product.qty !== "") {
+    return String(product.qty);
   }
   return "—";
 }

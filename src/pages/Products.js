@@ -68,16 +68,19 @@ export default function Products() {
     }
   };
 
-  if (loading.products && !products) return <p>Loading products...</p>;
+  if (loading.products && !products) return <p className="p-6 text-gray-500">Loading products...</p>;
 
   return (
     <div className="p-6">
       {/* Header */}
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-semibold">Products</h1>
+      <div className="page-header">
+        <div>
+          <h1 className="page-title">Products</h1>
+          <p className="page-subtitle">Manage your catalog, pricing, and sizes</p>
+        </div>
         <button
           onClick={() => setShowModal(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+          className="btn-primary"
         >
           + Add Product
         </button>

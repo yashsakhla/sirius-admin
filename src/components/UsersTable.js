@@ -38,40 +38,40 @@ export default function UsersTable({ users, onTogglePremium }) {
   };
 
   return (
-    <div className="overflow-x-auto rounded shadow bg-white">
+    <div className="table-shell">
       <table className="min-w-full text-sm">
-        <thead className="bg-gray-100">
+        <thead className="table-head-row">
           <tr>
-            <th className="py-2 px-4">#</th>
-            <th className="py-2 px-4">User ID</th>
-            <th className="py-2 px-4">User Name</th>
-            <th className="py-2 px-4">Email</th>
-            <th className="py-2 px-4">City</th>
-            <th className="py-2 px-4">Address</th>
-            <th className="py-2 px-4">Premium</th>
-            <th className="py-2 px-4">Orders</th>
+            <th className="table-cell">#</th>
+            <th className="table-cell">User ID</th>
+            <th className="table-cell">User Name</th>
+            <th className="table-cell">Email</th>
+            <th className="table-cell">City</th>
+            <th className="table-cell">Address</th>
+            <th className="table-cell">Premium</th>
+            <th className="table-cell">Orders</th>
           </tr>
         </thead>
         <tbody>
           {users.map((user, idx) => (
             <React.Fragment key={user._id}>
-              <tr className="border-t">
-                <td className="py-2 px-4">{idx + 1}</td>
-                <td className="py-2 px-4">{user._id}</td>
-                <td className="py-2 px-4">{user.name}</td>
-                <td className="py-2 px-4">{user.email}</td>
-                <td className="py-2 px-4">{user.address?.city || '—'}</td>
-                <td className="py-2 px-4">{formatAddress(user.address)}</td>
-                <td className="py-2 px-4">
+              <tr className="table-row">
+                <td className="table-cell text-gray-500">{idx + 1}</td>
+                <td className="table-cell text-gray-500">{user._id}</td>
+                <td className="table-cell font-medium text-gray-900">{user.name}</td>
+                <td className="table-cell">{user.email}</td>
+                <td className="table-cell">{user.address?.city || '—'}</td>
+                <td className="table-cell">{formatAddress(user.address)}</td>
+                <td className="table-cell">
                   <PremiumToggle
                     isPremium={user.premiumUser}
                     onToggle={() => onTogglePremium(user._id)}
                   />
                 </td>
-                <td className="py-2 px-4">
+                <td className="table-cell">
                   <button
                     onClick={() => toggleExpand(user._id)}
-                    className="text-gray-600 hover:text-black"
+                    className="text-gray-500 hover:text-blue-600 transition-colors"
                     title="View Orders"
                   >
                     {expandedUserId === user._id ? <FaChevronDown /> : <FaChevronRight />}
@@ -80,9 +80,9 @@ export default function UsersTable({ users, onTogglePremium }) {
               </tr>
               {expandedUserId === user._id && (
                 <tr>
-                  <td colSpan="8" className="bg-gray-50 px-4 py-2">
+                  <td colSpan="8" className="bg-gray-50/70 px-4 py-3">
                     {loadingOrders[user._id] ? (
-                      <div>Loading Orders...</div>
+                      <div className="text-sm text-gray-500">Loading Orders...</div>
                     ) : (
                       <UserOrdersTable orders={userOrders[user._id] || []} />
                     )}

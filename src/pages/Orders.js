@@ -43,11 +43,16 @@ export default function Orders() {
     }
   };
 
-  if (loading) return <p>Loading orders...</p>;
+  if (loading) return <p className="p-6 text-gray-500">Loading orders...</p>;
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-semibold mb-4">Orders</h1>
+      <div className="page-header">
+        <div>
+          <h1 className="page-title">Orders</h1>
+          <p className="page-subtitle">Track and update delivery status for all orders</p>
+        </div>
+      </div>
 
       {/* 💡 Enhanced Orders Table (can support filtering/sorting) */}
       <OrdersTable orders={orders} onChangeStatus={handleChangeStatus} />

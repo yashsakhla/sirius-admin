@@ -3,11 +3,11 @@ import { FaChevronRight, FaChevronDown } from "react-icons/fa";
 import StatusDropdown from "./StatusDropdown";
 
 const statusColors = {
-  Delivered: "bg-green-100",
-  Shipped: "bg-yellow-100",
-  Ordered: "bg-orange-100",
-  Cancelled: "bg-red-100",
-  Processing: "bg-blue-100",
+  Delivered: "bg-emerald-50",
+  Shipped: "bg-amber-50",
+  Ordered: "bg-orange-50",
+  Cancelled: "bg-red-50",
+  Processing: "bg-blue-50",
 };
 
 export default function OrdersTable({ orders, onChangeStatus }) {
@@ -33,7 +33,7 @@ export default function OrdersTable({ orders, onChangeStatus }) {
     setExpandedOrderId((prev) => (prev === orderId ? null : orderId));
   };
 
-  const centerCell = "py-2 px-4 text-center align-middle";
+  const centerCell = "py-3 px-4 text-center align-middle";
 
   return (
     <div className="mt-4">
@@ -44,12 +44,13 @@ export default function OrdersTable({ orders, onChangeStatus }) {
           placeholder="Search by Order ID, Products, or Email"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full max-w-sm px-4 py-2 border rounded shadow-sm focus:ring focus:ring-blue-300"
+          className="input-field max-w-sm"
         />
       </div>
 
-      <table className="min-w-full bg-white rounded shadow text-sm">
-        <thead className="bg-gray-100 text-gray-700">
+      <div className="table-shell">
+      <table className="min-w-full text-sm">
+        <thead className="table-head-row">
           <tr>
             <th className={centerCell}>Order ID</th>
             <th className={centerCell}>Products</th>
@@ -194,6 +195,7 @@ export default function OrdersTable({ orders, onChangeStatus }) {
           })}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

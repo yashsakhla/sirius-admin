@@ -44,16 +44,18 @@ export default function OfferContentModal({ onClose, onSubmit }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex justify-center items-center">
-      <div className="bg-white p-6 rounded-lg w-full max-w-lg shadow-lg">
-        <h2 className="text-xl font-bold mb-4">Create Offer Content</h2>
+    <div className="modal-overlay">
+      <div className="modal-panel max-w-lg">
+        <div className="modal-header">
+          <h2 className="text-lg font-bold text-gray-900">Create Offer Content</h2>
+        </div>
 
-        <div className="space-y-4">
+        <div className="modal-body">
           <input
             type="text"
             name="heading"
             placeholder="Offer Heading"
-            className="w-full border px-3 py-2 rounded"
+            className="input-field"
             value={form.heading}
             onChange={handleChange}
           />
@@ -61,14 +63,14 @@ export default function OfferContentModal({ onClose, onSubmit }) {
             type="text"
             name="name"
             placeholder="Offer Name"
-            className="w-full border px-3 py-2 rounded"
+            className="input-field"
             value={form.name}
             onChange={handleChange}
           />
           <textarea
             name="desc"
             placeholder="Offer Description"
-            className="w-full border px-3 py-2 rounded"
+            className="input-field"
             rows={3}
             value={form.desc}
             onChange={handleChange}
@@ -77,39 +79,40 @@ export default function OfferContentModal({ onClose, onSubmit }) {
             type="text"
             name="code"
             placeholder="Offer Code"
-            className="w-full border px-3 py-2 rounded"
+            className="input-field"
             value={form.code}
             onChange={handleChange}
           />
 
           <div>
-            <label className="block mb-1 font-medium">Upload Image</label>
+            <label className="field-label">Upload Image</label>
             <input
               type="file"
               accept="image/*"
               ref={fileRef}
               onChange={handleFileChange}
+              className="input-field file:mr-3 file:py-1 file:px-2 file:rounded file:border-0 file:bg-gray-100 file:text-gray-700"
             />
             {form.image && (
               <img
                 src={form.image}
                 alt="Preview"
-                className="h-32 w-full object-cover mt-2 rounded"
+                className="h-32 w-full object-cover mt-2 rounded-lg border border-gray-200"
               />
             )}
           </div>
         </div>
 
-        <div className="flex justify-end gap-3 pt-5">
+        <div className="modal-footer">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
+            className="btn-secondary"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            className="btn-primary"
           >
             Save Offer
           </button>

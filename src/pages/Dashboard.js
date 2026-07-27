@@ -2,8 +2,10 @@
 import { useEffect, useState, useMemo, useRef } from 'react';
 import DashboardCard from '../components/DashboardCard';
 import CityRankingTable from '../components/CityRankingTable';
+import TrendChart from '../components/charts/TrendChart';
 import { useGlobalData } from '../context/GlobalDataContext';
 import { setAuthToken } from '../api';
+import { buildMonthlyOrderTrend } from '../utils/orderTrends';
 
 export default function Dashboard() {
   const { data, loadDataIfNeeded, loading } = useGlobalData();
@@ -36,6 +38,16 @@ export default function Dashboard() {
     };
   }, [orders]);
 
+  const monthlyTrend = useMemo(() => buildMonthlyOrderTrend(orders || []), [orders]);
+  const ordersSeries = useMemo(
+    () => monthlyTrend.map((m) => ({ label: m.label, value: m.count })),
+    [monthlyTrend]
+  );
+  const revenueSeries = useMemo(
+    () => monthlyTrend.map((m) => ({ label: m.label, value: m.revenue })),
+    [monthlyTrend]
+  );
+
   // ✅ Count-up animation for total orders
   useEffect(() => {
     let count = 0;
@@ -47,11 +59,16 @@ export default function Dashboard() {
     return () => clearInterval(interval);
   }, [totalOrders]);
 
-  if (loading.orders && !orders) return <p className="p-6">Loading orders...</p>;
+  if (loading.orders && !orders) return <p className="p-6 text-gray-500">Loading orders...</p>;
 
   return (
     <div className="p-6 space-y-6">
-      <h1 className="text-3xl font-semibold mb-6">Dashboard</h1>
+      <div className="page-header">
+        <div>
+          <h1 className="page-title">Dashboard</h1>
+          <p className="page-subtitle">Overview of orders and delivery performance</p>
+        </div>
+      </div>
 
       {/* ✅ Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -59,6 +76,26 @@ export default function Dashboard() {
         <DashboardCard title="Delivered" value={delivered} color="bg-green-500" />
         <DashboardCard title="Dispatched" value={dispatched} color="bg-yellow-500 text-black" />
         <DashboardCard title="Cancelled" value={cancelled} color="bg-red-500" />
+      </div>
+
+      {/* 📈 Orders & Revenue Trends */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <TrendChart
+          title="Orders Trend"
+          subtitle="Number of orders placed per month"
+          points={ordersSeries}
+          color="#2a78d6"
+          valueLabel="Orders"
+          formatValue={(v) => Math.round(v).toLocaleString('en-IN')}
+        />
+        <TrendChart
+          title="Revenue Generated"
+          subtitle="Total order value per month"
+          points={revenueSeries}
+          color="#eb6834"
+          valueLabel="Revenue"
+          formatValue={(v) => `₹${Math.round(v).toLocaleString('en-IN')}`}
+        />
       </div>
 
       {/* 📍 City Ranking Table */}

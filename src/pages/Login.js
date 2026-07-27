@@ -31,49 +31,67 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-cyan-100 to-white p-4">
-      <div className="bg-white flex rounded-lg shadow-xl overflow-hidden w-full max-w-5xl">
-        
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-700 via-blue-600 to-cyan-500 p-4">
+      <div className="bg-white flex rounded-2xl shadow-2xl overflow-hidden w-full max-w-4xl">
+
         {/* Left: Image */}
-        <div className="w-1/2 hidden md:block">
+        <div className="w-1/2 hidden md:block relative">
           <img
             src={loginImg}
             alt="Login Illustration"
-            className="h-full object-cover"
+            className="h-full w-full object-cover"
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-blue-900/60 via-blue-900/10 to-transparent" />
         </div>
 
         {/* Right: Login form */}
-        <div className="w-full md:w-1/2 p-8">
-          <h2 className="text-3xl font-bold mb-3 text-center text-blue-700">Sirius Admin Login</h2>
-          <p className="text-sm text-gray-600 text-center mb-6">Please login to access the dashboard</p>
+        <div className="w-full md:w-1/2 p-10 flex flex-col justify-center">
+          <div className="mb-8 text-center">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 text-white text-xl font-bold shadow-lg shadow-blue-600/30">
+              S
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900">Sirius Admin</h2>
+            <p className="text-sm text-gray-500 mt-1">Sign in to manage your store</p>
+          </div>
 
-          <input
-            type="text"
-            placeholder="Username"
-            className="w-full border border-gray-300 px-4 py-3 rounded mb-3"
-            value={form.username}
-            onChange={(e) => setForm({ ...form, username: e.target.value })}
-          />
+          <div className="space-y-4">
+            <div>
+              <label className="field-label">Username</label>
+              <input
+                type="text"
+                placeholder="Enter your username"
+                className="input-field"
+                value={form.username}
+                onChange={(e) => setForm({ ...form, username: e.target.value })}
+              />
+            </div>
 
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full border border-gray-300 px-4 py-3 rounded mb-3"
-            value={form.password}
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
-          />
+            <div>
+              <label className="field-label">Password</label>
+              <input
+                type="password"
+                placeholder="Enter your password"
+                className="input-field"
+                value={form.password}
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
+              />
+            </div>
 
-          {error && <p className="text-sm text-red-500 mb-3">{error}</p>}
+            {error && (
+              <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2">
+                {error}
+              </p>
+            )}
 
-          <button
-            onClick={handleLogin}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded font-medium"
-          >
-            Login
-          </button>
+            <button
+              onClick={handleLogin}
+              className="btn-primary w-full py-3 text-base"
+            >
+              Login
+            </button>
+          </div>
 
-          <p className="text-xs text-gray-400 text-center mt-6">
+          <p className="text-xs text-gray-400 text-center mt-8">
             Default: <strong>admin</strong> / <strong>admin123</strong>
           </p>
         </div>

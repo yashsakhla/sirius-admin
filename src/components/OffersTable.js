@@ -78,75 +78,71 @@ export default function OffersTable({ offers, onAdd, onToggle, onDelete }) {
       <div className="flex justify-end mb-4">
         <button
           onClick={() => setShowModal(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+          className="btn-primary"
         >
           + Create Offer
         </button>
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto bg-white shadow rounded">
+      <div className="table-shell">
         <table className="min-w-full text-sm">
-          <thead className="bg-gray-100 text-gray-700">
+          <thead className="table-head-row">
             <tr>
-              <th className="px-4 py-2">Offer Code</th>
-              <th className="px-4 py-2">Name</th>
-              <th className="px-4 py-2">Description</th>
-              <th className="px-4 py-2">Type</th>
-              <th className="px-4 py-2">Value</th>
-              <th className="px-4 py-2">Operations</th> {/* New header */}
-              <th className="px-4 py-2">Status</th>
-              <th className="px-4 py-2">Actions</th>
+              <th className="table-cell">Offer Code</th>
+              <th className="table-cell">Name</th>
+              <th className="table-cell">Description</th>
+              <th className="table-cell">Type</th>
+              <th className="table-cell">Value</th>
+              <th className="table-cell">Operations</th>
+              <th className="table-cell">Status</th>
+              <th className="table-cell">Actions</th>
             </tr>
           </thead>
           <tbody>
             {Array.isArray(offers) && offers.length > 0 ? (
               offers.map((offer) => (
-                <tr key={offer._id} className="border-t">
-                  <td className="px-4 py-2">{offer.code}</td>
-                  <td className="px-4 py-2">{offer.name}</td>
-                  <td className="px-4 py-2">{offer.desc}</td>
-                  <td className="px-4 py-2">{offer.type}</td>
-                  <td className="px-4 py-2">
+                <tr key={offer._id} className="table-row">
+                  <td className="table-cell font-medium text-gray-900">{offer.code}</td>
+                  <td className="table-cell">{offer.name}</td>
+                  <td className="table-cell text-gray-600 max-w-xs">
+                    <span className="line-clamp-2">{offer.desc}</span>
+                  </td>
+                  <td className="table-cell">{offer.type}</td>
+                  <td className="table-cell">
                     {offer.type === 'Percent'
                       ? `${offer.percent}%`
                       : offer.type === 'Buy X Get Y Free'
                       ? `Buy ${offer.buyQty}, Get ${offer.freeQty}`
                       : 'Free Delivery'}
                   </td>
-                  <td className="px-4 py-2">{offer.operationName ?? 'None'}</td> {/* Show operation name */}
-                  <td className="px-4 py-2">
-                    <span
-                      className={`text-xs px-2 py-1 rounded-full font-semibold ${
-                        offer.active ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
-                      }`}
-                    >
+                  <td className="table-cell">{offer.operationName ?? 'None'}</td>
+                  <td className="table-cell">
+                    <span className={offer.active ? 'badge-success' : 'badge-danger'}>
                       {offer.active ? 'Enabled' : 'Disabled'}
                     </span>
                   </td>
-                  <td className="px-4 py-2 flex items-center gap-2">
-                    <button
-                      onClick={() => onToggle(offer._id)}
-                      className={`text-xs px-3 py-1 rounded ${
-                        offer.active
-                          ? 'bg-yellow-500 hover:bg-yellow-600 text-white'
-                          : 'bg-green-500 hover:bg-green-600 text-white'
-                      }`}
-                    >
-                      {offer.active ? 'Disable' : 'Enable'}
-                    </button>
-                    <button
-                      onClick={() => onDelete(offer._id)}
-                      className="text-xs px-3 py-1 rounded bg-red-600 hover:bg-red-700 text-white"
-                    >
-                      Delete
-                    </button>
+                  <td className="table-cell">
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => onToggle(offer._id)}
+                        className={offer.active ? 'btn-warning btn-sm' : 'btn-success btn-sm'}
+                      >
+                        {offer.active ? 'Disable' : 'Enable'}
+                      </button>
+                      <button
+                        onClick={() => onDelete(offer._id)}
+                        className="btn-danger btn-sm"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="8" className="px-4 py-6 text-center text-gray-500 italic">
+                <td colSpan="8" className="table-cell text-center text-gray-500 italic">
                   No offers created yet.
                 </td>
               </tr>
@@ -157,17 +153,19 @@ export default function OffersTable({ offers, onAdd, onToggle, onDelete }) {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed z-50 inset-0 bg-black bg-opacity-40 flex justify-center items-center">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl max-h-[90vh] overflow-auto">
-            <h2 className="text-xl font-bold mb-4">Create Offer</h2>
+        <div className="modal-overlay">
+          <div className="modal-panel max-w-md">
+            <div className="modal-header">
+              <h2 className="text-lg font-bold text-gray-900">Create Offer</h2>
+            </div>
 
-            <div className="space-y-3">
+            <div className="modal-body">
               <input
                 type="text"
                 placeholder="Offer Code"
                 value={form.code}
                 onChange={(e) => setForm({ ...form, code: e.target.value })}
-                className="w-full border px-3 py-2 rounded"
+                className="input-field"
               />
 
               <input
@@ -175,20 +173,20 @@ export default function OffersTable({ offers, onAdd, onToggle, onDelete }) {
                 placeholder="Offer Name"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full border px-3 py-2 rounded"
+                className="input-field"
               />
 
               <textarea
                 placeholder="Offer Description"
                 value={form.desc}
                 onChange={(e) => setForm({ ...form, desc: e.target.value })}
-                className="w-full border px-3 py-2 rounded"
+                className="input-field"
               />
 
               <select
                 value={form.type}
                 onChange={(e) => setForm({ ...form, type: e.target.value })}
-                className="w-full border px-3 py-2 rounded"
+                className="input-field"
               >
                 <option value="Free Delivery">Free Delivery</option>
                 <option value="Percent">Product Off</option>
@@ -201,7 +199,7 @@ export default function OffersTable({ offers, onAdd, onToggle, onDelete }) {
                   placeholder="Offer % Off"
                   value={form.percent}
                   onChange={(e) => setForm({ ...form, percent: e.target.value })}
-                  className="w-full border px-3 py-2 rounded"
+                  className="input-field"
                 />
               )}
 
@@ -212,28 +210,28 @@ export default function OffersTable({ offers, onAdd, onToggle, onDelete }) {
                     placeholder="Buy No"
                     value={form.buyQty}
                     onChange={(e) => setForm({ ...form, buyQty: e.target.value })}
-                    className="w-1/2 border px-3 py-2 rounded"
+                    className="input-field w-1/2"
                   />
                   <input
                     type="number"
                     placeholder="Free No"
                     value={form.freeQty}
                     onChange={(e) => setForm({ ...form, freeQty: e.target.value })}
-                    className="w-1/2 border px-3 py-2 rounded"
+                    className="input-field w-1/2"
                   />
                 </div>
               )}
 
               {/* User Type Dropdown */}
               <div>
-                <label className="block font-semibold mb-1" htmlFor="userTypeSelect">
+                <label className="field-label" htmlFor="userTypeSelect">
                   User Type
                 </label>
                 <select
                   id="userTypeSelect"
                   value={form.userType}
                   onChange={(e) => setForm({ ...form, userType: e.target.value })}
-                  className="w-full border px-3 py-2 rounded mb-3"
+                  className="input-field mb-3"
                 >
                   <option value="Standard">Standard</option>
                   <option value="Premium">Premium</option>
@@ -241,14 +239,14 @@ export default function OffersTable({ offers, onAdd, onToggle, onDelete }) {
 
                 {form.userType === 'Premium' && (
                   <>
-                    <label className="block font-semibold mb-1" htmlFor="premiumApplicabilitySelect">
+                    <label className="field-label" htmlFor="premiumApplicabilitySelect">
                       Premium Applicability
                     </label>
                     <select
                       id="premiumApplicabilitySelect"
                       value={form.premiumApplicability}
                       onChange={(e) => setForm({ ...form, premiumApplicability: e.target.value })}
-                      className="w-full border px-3 py-2 rounded"
+                      className="input-field"
                     >
                       <option value="All">All</option>
                       <option value="Limited">Limited</option>
@@ -259,7 +257,7 @@ export default function OffersTable({ offers, onAdd, onToggle, onDelete }) {
 
               {/* Operations Dropdown */}
               <div>
-                <label className="block font-semibold mb-1 mt-4" htmlFor="operationsSelect">
+                <label className="field-label mt-2" htmlFor="operationsSelect">
                   Operations
                 </label>
                 <select
@@ -268,13 +266,13 @@ export default function OffersTable({ offers, onAdd, onToggle, onDelete }) {
                   onChange={(e) => {
                     const selectedId = Number(e.target.value);
                     const selectedOption = operationOptions.find(opt => opt.id === selectedId);
-                    setForm({ 
-                      ...form, 
+                    setForm({
+                      ...form,
                       operationId: selectedId,
                       operationName: selectedOption ? selectedOption.name : 'None'
                     });
                   }}
-                  className="w-full border px-3 py-2 rounded"
+                  className="input-field"
                 >
                   {operationOptions.map(({ id, name }) => (
                     <option key={id} value={id}>
@@ -285,16 +283,16 @@ export default function OffersTable({ offers, onAdd, onToggle, onDelete }) {
               </div>
             </div>
 
-            <div className="flex justify-end gap-3 mt-5">
+            <div className="modal-footer">
               <button
                 onClick={() => setShowModal(false)}
-                className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400"
+                className="btn-secondary"
               >
                 Cancel
               </button>
               <button
                 onClick={handleAddOffer}
-                className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
+                className="btn-primary"
               >
                 Add Offer
               </button>

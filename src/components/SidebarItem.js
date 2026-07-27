@@ -6,11 +6,15 @@ export default function SidebarItem({ to, icon, label }) {
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `flex items-center px-6 py-2.5 hover:bg-gray-700 rounded transition ${isActive ? 'bg-gray-900' : ''}`
+        `flex items-center gap-3 mx-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+          isActive
+            ? 'bg-blue-600 text-white shadow-sm shadow-blue-600/30'
+            : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+        }`
       }
     >
-      {icon}
-      <span className="ml-4">{label}</span>
+      <span className="text-base">{icon}</span>
+      <span>{label}</span>
     </NavLink>
   );
 }

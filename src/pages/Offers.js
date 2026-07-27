@@ -68,12 +68,15 @@ export default function Offers() {
 
   return (
     <div className="p-6">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Offers</h1>
+      <div className="page-header">
+        <div>
+          <h1 className="page-title">Offers</h1>
+          <p className="page-subtitle">Create and manage discount codes and promotions</p>
+        </div>
       </div>
 
       {loading ? (
-        <div>Loading offers...</div>
+        <div className="text-gray-500">Loading offers...</div>
       ) : (
         <OffersTable
           offers={offers}

@@ -80,10 +80,10 @@ export default function AddProductModal({ onClose, onAdd }) {
       const exists = prev.some((v) => v.size === size);
       if (isGift) {
         if (exists) return [];
-        return [{ size, basicPrice: '', discountedPrice: '' }];
+        return [{ size, basicPrice: '', discountedPrice: '', qty: '' }];
       }
       if (exists) return prev.filter((v) => v.size !== size);
-      return [...prev, { size, basicPrice: '', discountedPrice: '' }];
+      return [...prev, { size, basicPrice: '', discountedPrice: '', qty: '' }];
     });
   };
 
@@ -102,6 +102,7 @@ export default function AddProductModal({ onClose, onAdd }) {
       size: v.size,
       basicPrice: parseFloat(v.basicPrice),
       discountedPrice: parseFloat(v.discountedPrice),
+      qty: parseInt(v.qty, 10),
     }));
 
     if (
@@ -110,11 +111,13 @@ export default function AddProductModal({ onClose, onAdd }) {
           Number.isNaN(s.basicPrice) ||
           s.basicPrice < 0 ||
           Number.isNaN(s.discountedPrice) ||
-          s.discountedPrice < 0
+          s.discountedPrice < 0 ||
+          Number.isNaN(s.qty) ||
+          s.qty < 0
       )
     ) {
       return alert(
-        'Enter a valid basic price and discounted price (₹) for each selected size'
+        'Enter a valid basic price, discounted price (₹), and quantity for each selected size'
       );
     }
 
@@ -141,17 +144,18 @@ export default function AddProductModal({ onClose, onAdd }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-      <div className="bg-white w-full max-w-md p-6 rounded shadow-xl max-h-[90vh] overflow-y-auto">
-        <h2 className="text-xl font-bold mb-4">Add Product</h2>
-
-        <div className="space-y-3">
+    <div className="modal-overlay">
+      <div className="modal-panel max-w-md">
+        <div className="modal-header">
+          <h2 className="text-lg font-bold text-gray-900">Add Product</h2>
+        </div>
+        <div className="modal-body">
           <input
             name="name"
             placeholder="Product Name"
             value={form.name}
             onChange={handleChange}
-            className="w-full border px-3 py-2 rounded"
+            className="input-field"
             required
           />
 
@@ -160,10 +164,10 @@ export default function AddProductModal({ onClose, onAdd }) {
             placeholder="Product Description"
             value={form.description}
             onChange={handleChange}
-            className="w-full border px-3 py-2 rounded"
+            className="input-field"
           />
 
-          <div className="border rounded px-3 py-2">
+          <div className="border border-gray-200 rounded-lg px-3 py-2">
             <p className="text-sm font-medium mb-2">Product category</p>
             <p className="text-xs text-gray-600 mb-2">
               Single is a normal product. Gift lets the customer choose which products go in the gift.
@@ -205,12 +209,12 @@ export default function AddProductModal({ onClose, onAdd }) {
             </div>
           </div>
 
-          <div className="border rounded px-3 py-2">
+          <div className="border border-gray-200 rounded-lg px-3 py-2">
             <p className="text-sm font-medium mb-2">Sizes & prices</p>
             <p className="text-xs text-gray-600 mb-2">
               {form.productCategoryType === PRODUCT_CATEGORY_TYPE.GIFT
-                ? 'Gift products: choose one size only, then enter prices.'
-                : 'Check one or more sizes, then enter basic (MRP) and discounted price for each.'}
+                ? 'Gift products: choose one size only, then enter prices and quantity.'
+                : 'Check one or more sizes, then enter basic (MRP) price, discounted price, and quantity for each.'}
             </p>
             <div className="flex flex-wrap gap-3 mb-3">
               {SIZE_OPTIONS.map((size) => {
@@ -243,7 +247,7 @@ export default function AddProductModal({ onClose, onAdd }) {
                         onChange={(e) =>
                           setVariantField(v.size, 'basicPrice', e.target.value)
                         }
-                        className="flex-1 border px-3 py-2 rounded text-sm"
+                        className="input-field flex-1"
                         disabled={uploading}
                       />
                       <input
@@ -259,7 +263,19 @@ export default function AddProductModal({ onClose, onAdd }) {
                             e.target.value
                           )
                         }
-                        className="flex-1 border px-3 py-2 rounded text-sm"
+                        className="input-field flex-1"
+                        disabled={uploading}
+                      />
+                      <input
+                        type="number"
+                        min="0"
+                        step="1"
+                        placeholder="Quantity"
+                        value={v.qty}
+                        onChange={(e) =>
+                          setVariantField(v.size, 'qty', e.target.value)
+                        }
+                        className="input-field flex-1"
                         disabled={uploading}
                       />
                     </div>
@@ -273,7 +289,7 @@ export default function AddProductModal({ onClose, onAdd }) {
             name="category"
             value={form.category}
             onChange={handleChange}
-            className="w-full border px-3 py-2 rounded"
+            className="input-field"
           >
             {categories.length > 0 ? (
               categories.map((cat) => (
@@ -292,7 +308,7 @@ export default function AddProductModal({ onClose, onAdd }) {
               accept="image/*"
               multiple
               onChange={handleFilesChange}
-              className="w-full border px-3 py-2 rounded"
+              className="input-field file:mr-3 file:py-1 file:px-2 file:rounded file:border-0 file:bg-gray-100 file:text-gray-700"
               disabled={uploading}
             />
 
@@ -325,13 +341,13 @@ export default function AddProductModal({ onClose, onAdd }) {
             ) : null}
           </div>
 
-          <div className="flex justify-end gap-3 mt-4">
-            <button onClick={onClose} className="px-4 py-2 bg-gray-300 rounded">
+          <div className="flex justify-end gap-3 pt-2">
+            <button onClick={onClose} className="btn-secondary">
               Cancel
             </button>
             <button
               onClick={handleSubmit}
-              className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-60"
+              className="btn-primary"
               disabled={uploading}
             >
               {uploading ? 'Uploading...' : 'Add'}

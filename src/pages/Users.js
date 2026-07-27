@@ -27,11 +27,16 @@ export default function Users() {
     fetchUsers();
   }, []);
 
-  if (loading) return <div className="p-4">Loading users...</div>;
+  if (loading) return <div className="p-6 text-gray-500">Loading users...</div>;
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Users</h1>
+      <div className="page-header">
+        <div>
+          <h1 className="page-title">Users</h1>
+          <p className="page-subtitle">Browse registered users and their order history</p>
+        </div>
+      </div>
       <UsersTable users={users} />
     </div>
   );

@@ -14,26 +14,36 @@ export default function CityRankingTable({ orders = [] }) {
   const cityList = Object.entries(grouped); // [ [city, {delivered, total}], ... ]
 
   return (
-    <div className="bg-white shadow mt-6 p-4 rounded-lg">
-      <h2 className="text-lg font-semibold mb-2">Top Cities by Deliveries</h2>
-      <table className="min-w-full text-sm text-left border">
-        <thead className="bg-gray-100 text-gray-700">
-          <tr>
-            <th className="px-4 py-2">City</th>
-            <th className="px-4 py-2">Delivered</th>
-            <th className="px-4 py-2">Total Orders</th>
-          </tr>
-        </thead>
-        <tbody>
-          {cityList.map(([city, stats]) => (
-            <tr key={city} className="border-t">
-              <td className="px-4 py-2">{city}</td>
-              <td className="px-4 py-2">{stats.delivered}</td>
-              <td className="px-4 py-2">{stats.total}</td>
+    <div className="card mt-6 p-5">
+      <h2 className="text-lg font-semibold text-gray-900 mb-4">Top Cities by Deliveries</h2>
+      <div className="table-shell">
+        <table className="min-w-full text-sm text-left">
+          <thead className="table-head-row">
+            <tr>
+              <th className="table-cell">City</th>
+              <th className="table-cell">Delivered</th>
+              <th className="table-cell">Total Orders</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {cityList.length === 0 ? (
+              <tr>
+                <td colSpan={3} className="table-cell text-center text-gray-500">
+                  No order data yet.
+                </td>
+              </tr>
+            ) : (
+              cityList.map(([city, stats]) => (
+                <tr key={city} className="table-row">
+                  <td className="table-cell font-medium text-gray-900">{city}</td>
+                  <td className="table-cell text-emerald-700">{stats.delivered}</td>
+                  <td className="table-cell">{stats.total}</td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

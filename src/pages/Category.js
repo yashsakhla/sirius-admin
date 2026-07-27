@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import {
   createCategory,
   updateCategory as updateCategoryApi,
+  deleteCategory as deleteCategoryApi,
   setAuthToken,
 } from "../api";
 import { useGlobalData } from "../context/GlobalDataContext";
@@ -88,50 +89,72 @@ export default function Category() {
     }
   };
 
-  if (loading.categories && !categories) return <p>Loading categories...</p>;
+  const handleDeleteCategory = async (cat) => {
+    if (!window.confirm(`Delete category "${cat.name}"? This cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      await deleteCategoryApi(cat._id);
+      refreshData("categories"); // 🔁 Refresh after deleting
+    } catch (err) {
+      alert(err?.response?.data?.message || "Failed to delete category.");
+    }
+  };
+
+  if (loading.categories && !categories) return <p className="p-6 text-gray-500">Loading categories...</p>;
 
   return (
     <div className="p-6">
       {/* Header */}
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Categories</h1>
+      <div className="page-header">
+        <div>
+          <h1 className="page-title">Categories</h1>
+          <p className="page-subtitle">Organize products into browsable categories</p>
+        </div>
         <button
           onClick={() => setShowAddModal(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+          className="btn-primary"
         >
           + Add Category
         </button>
       </div>
 
       {/* Categories Table */}
-      <div className="overflow-x-auto bg-white shadow rounded">
+      <div className="table-shell">
         <table className="min-w-full text-left text-sm">
-          <thead className="bg-gray-100 text-gray-700">
+          <thead className="table-head-row">
             <tr>
-              <th className="px-4 py-2">#</th>
-              <th className="px-4 py-2">Category Name</th>
-              <th className="px-4 py-2">No. of Products</th>
-              <th className="px-4 py-2">Action</th>
+              <th className="table-cell">#</th>
+              <th className="table-cell">Category Name</th>
+              <th className="table-cell">No. of Products</th>
+              <th className="table-cell">Action</th>
             </tr>
           </thead>
           <tbody>
             {categories?.map((cat, idx) => (
-              <tr key={cat._id} className="border-t">
-                <td className="px-4 py-2">{idx + 1}</td>
-                <td className="px-4 py-2">{cat.name}</td>
-                <td className="px-4 py-2 text-center">
+              <tr key={cat._id} className="table-row">
+                <td className="table-cell text-gray-500">{idx + 1}</td>
+                <td className="table-cell font-medium text-gray-900">{cat.name}</td>
+                <td className="table-cell text-center">
                   {productsCount[cat.name] || 0}
                 </td>
-                <td className="px-4 py-2">
+                <td className="table-cell flex gap-2">
                   <button
                     onClick={() => {
                       setEditingCategory(cat);
                       setNewCategory(cat.name);
                       setShowEditModal(true);
                     }}
-                    className="bg-yellow-400 hover:bg-yellow-500 text-white text-sm px-3 py-1 rounded"
+                    className="btn-warning btn-sm"
                   >
                     Edit
+                  </button>
+                  <button
+                    onClick={() => handleDeleteCategory(cat)}
+                    className="btn-danger btn-sm"
+                  >
+                    Delete
                   </button>
                 </td>
               </tr>
@@ -142,26 +165,30 @@ export default function Category() {
 
       {/* Add Category Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg w-full max-w-sm shadow-xl">
-            <h2 className="text-lg font-bold mb-4">Add Category</h2>
-            <input
-              type="text"
-              placeholder="Enter category name"
-              value={newCategory}
-              onChange={(e) => setNewCategory(e.target.value)}
-              className="w-full border px-3 py-2 mb-4 rounded focus:outline-none focus:ring focus:ring-blue-400"
-            />
-            <div className="flex justify-end gap-3">
+        <div className="modal-overlay">
+          <div className="modal-panel max-w-sm">
+            <div className="modal-header">
+              <h2 className="text-lg font-bold text-gray-900">Add Category</h2>
+            </div>
+            <div className="modal-body">
+              <input
+                type="text"
+                placeholder="Enter category name"
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+                className="input-field"
+              />
+            </div>
+            <div className="modal-footer">
               <button
                 onClick={() => setShowAddModal(false)}
-                className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
+                className="btn-secondary"
               >
                 Cancel
               </button>
               <button
                 onClick={handleAddCategory}
-                className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
+                className="btn-primary"
               >
                 Add
               </button>
@@ -172,30 +199,34 @@ export default function Category() {
 
       {/* Edit Category Modal */}
       {showEditModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg w-full max-w-sm shadow-xl">
-            <h2 className="text-lg font-bold mb-4">Edit Category</h2>
-            <input
-              type="text"
-              placeholder="Enter new name"
-              value={newCategory}
-              onChange={(e) => setNewCategory(e.target.value)}
-              className="w-full border px-3 py-2 mb-4 rounded focus:outline-none focus:ring focus:ring-yellow-400"
-            />
-            <div className="flex justify-end gap-3">
+        <div className="modal-overlay">
+          <div className="modal-panel max-w-sm">
+            <div className="modal-header">
+              <h2 className="text-lg font-bold text-gray-900">Edit Category</h2>
+            </div>
+            <div className="modal-body">
+              <input
+                type="text"
+                placeholder="Enter new name"
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+                className="input-field"
+              />
+            </div>
+            <div className="modal-footer">
               <button
                 onClick={() => {
                   setShowEditModal(false);
                   setEditingCategory(null);
                   setNewCategory("");
                 }}
-                className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
+                className="btn-secondary"
               >
                 Cancel
               </button>
               <button
                 onClick={handleEditCategory}
-                className="px-4 py-2 rounded bg-yellow-500 text-white hover:bg-yellow-600"
+                className="btn-warning"
               >
                 Save
               </button>

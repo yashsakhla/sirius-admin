@@ -34,8 +34,10 @@ export const adminLogin = (credentials) => {
 };
 
 export const logout = () => {
-  // Remove token from localStorage
+  // Remove token + admin flags from localStorage
   localStorage.removeItem('token');
+  localStorage.removeItem('isAdmin');
+  localStorage.removeItem('admin_username');
   // Remove Authorization header from axios defaults
   delete api.defaults.headers.common['Authorization'];
 };
@@ -102,6 +104,11 @@ export const createCategory = (name) => {
 // ✅ Update (PUT) category by ID
 export const updateCategory = (id, name) => {
   return api.put(`/api/categories/${id}`, { name });
+};
+
+// ✅ Delete category by ID
+export const deleteCategory = (id) => {
+  return api.delete(`/api/categories/${id}`);
 };
 
 /**
